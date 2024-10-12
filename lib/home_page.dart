@@ -192,8 +192,8 @@ class GridPage extends StatelessWidget {
                     child: Container(
                       child: AspectRatio(
                         aspectRatio: 1.0, // Set aspect ratio to 1:1
-                        child: recipe['imageUrl'].startsWith('http')
-                            ? Image.network(
+                        child: recipe['imageUrl'].startsWith('assets/')
+                            ? Image.asset(
                                 recipe['imageUrl'],
                                 fit: BoxFit.cover,
                                 width: double.infinity,
@@ -250,8 +250,8 @@ class GridPage extends StatelessWidget {
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey, width: 2.0), // Add border
                 ),
-                child: recipe['imageUrl'].startsWith('http')
-                    ? Image.network(
+                child: recipe['imageUrl'].startsWith('assets/')
+                    ? Image.asset(
                         recipe['imageUrl'],
                         fit: BoxFit.cover,
                       )

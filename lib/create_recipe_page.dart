@@ -23,7 +23,7 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
   final TextEditingController _servingSizeController = TextEditingController();
   final TextEditingController _ingredientsController = TextEditingController();
   File? _image;
-  final String _placeholderImagePath = 'https://via.placeholder.com/150';
+  final String _placeholderImagePath = 'assets/150.png';
 
   @override
   void dispose() {

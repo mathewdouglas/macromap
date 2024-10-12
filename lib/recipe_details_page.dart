@@ -200,25 +200,12 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
           children: [
             Hero(
               tag: 'recipeImage_${_recipe!['id']}',
-              child: _recipe!['imageUrl'].startsWith('http')
-                  ? Image.network(
+              child: _recipe!['imageUrl'].startsWith('assets/')
+                  ? Image.asset(
                       _recipe!['imageUrl'], // Recipe image URL
                       fit: BoxFit.cover,
                       width: double.infinity,
                       height: 200,
-                      loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                        if (loadingProgress == null) {
-                          return child;
-                        } else {
-                          return Center(
-                            child: CircularProgressIndicator(
-                              value: loadingProgress.expectedTotalBytes != null
-                                  ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
-                                  : null,
-                            ),
-                          );
-                        }
-                      },
                     )
                   : Image.file(
                       File(_recipe!['imageUrl']), // Local image file path
