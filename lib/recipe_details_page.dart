@@ -131,7 +131,8 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                     newServingSize,
                     newIngredients,
                   );
-                  await _fetchRecipe(); // Fetch the updated recipe
+                  await _fetchRecipe();
+                  widget.onEditRecipe(); // Fetch the updated recipe
                   Navigator.of(context).pop(); // Close the dialog
                 }
               },

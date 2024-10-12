@@ -248,8 +248,10 @@ class GridPage extends StatelessWidget {
                 width: 50,
                 height: 50,
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey, width: 2.0), // Add border
+                  borderRadius: BorderRadius.circular(5), 
+                  border: Border.all(width: 0)// Add border
                 ),
+                clipBehavior: Clip.antiAlias,
                 child: recipe['imageUrl'].startsWith('assets/')
                     ? Image.asset(
                         recipe['imageUrl'],
