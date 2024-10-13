@@ -36,6 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
       GridPage(recipes: _recipes, onRemoveRecipe: _removeRecipe, onEditRecipe: _editRecipe, isGridView: isGridView),
       const Center(child: Text('Macronutrient Goals')),
       WeeklyPlanPage(),
+      const Center(child: Text('Settings')),
     ];
   }
 
@@ -109,6 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
             )
           : null,
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.menu_book),
@@ -121,6 +123,10 @@ class _MyHomePageState extends State<MyHomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_today),
             label: 'Meal Plan',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
           ),
         ],
         currentIndex: _selectedIndex,
