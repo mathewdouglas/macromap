@@ -42,8 +42,8 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
     final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       final directory = await getApplicationDocumentsDirectory();
-      final fileName = path.basename(pickedFile.path);
-      final localImage = await File(pickedFile.path).copy('${directory.path}/$fileName');
+      final fileName = path.join(directory.path, path.basename(pickedFile.path));
+      final localImage = await File(pickedFile.path).copy(fileName);
       setState(() {
         _image = localImage;
       });

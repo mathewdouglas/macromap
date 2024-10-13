@@ -219,11 +219,19 @@ class GridPage extends StatelessWidget {
                                 recipe['imageUrl'],
                                 fit: BoxFit.cover,
                                 width: double.infinity,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return const Icon(Icons.broken_image,
+                                      size: 50);
+                                },
                               )
                             : Image.file(
                                 File(recipe['imageUrl']),
                                 fit: BoxFit.cover,
                                 width: double.infinity,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return const Icon(Icons.broken_image,
+                                      size: 50);
+                                },
                               ),
                       ),
                     ),
@@ -279,10 +287,16 @@ class GridPage extends StatelessWidget {
                     ? Image.asset(
                         recipe['imageUrl'],
                         fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Icon(Icons.broken_image, size: 50);
+                        },
                       )
                     : Image.file(
                         File(recipe['imageUrl']),
                         fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Icon(Icons.broken_image, size: 50);
+                        },
                       ),
               ),
             ),

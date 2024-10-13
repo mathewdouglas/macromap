@@ -207,12 +207,18 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                       fit: BoxFit.cover,
                       width: double.infinity,
                       height: 200,
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Icon(Icons.broken_image, size: 50);
+                      },
                     )
                   : Image.file(
                       File(_recipe!['imageUrl']), // Local image file path
                       fit: BoxFit.cover,
                       width: double.infinity,
                       height: 200,
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Icon(Icons.broken_image, size: 50);
+                      },
                     ),
             ),
             Padding(
