@@ -13,18 +13,45 @@ class WeeklyPlanPage extends StatefulWidget {
 class _WeeklyPlanPageState extends State<WeeklyPlanPage> {
   late String selectedDay;
   List<Map<String, dynamic>> _recipes = [];
+  Map<String, String> selectedRecipes = {
+    'Breakfast': 'Select a recipe',
+    'Snack 1': 'Select a recipe',
+    'Lunch': 'Select a recipe',
+    'Snack 2': 'Select a recipe',
+    'Dinner': 'Select a recipe',
+    'Extra': 'Select a recipe',
+  };
 
   @override
   void initState() {
     super.initState();
     selectedDay = DateFormat('EEE, d MMM yyyy').format(DateTime.now());
     _loadRecipes();
+    _loadSelectedRecipes();
   }
 
   Future<void> _loadRecipes() async {
     final recipes = await DatabaseHelper().getRecipes();
     setState(() {
       _recipes = recipes;
+    });
+  }
+
+  Future<void> _loadSelectedRecipes() async {
+    if (_recipes.isEmpty) {
+      await _loadRecipes();
+    }
+    
+    final selectedRecipesMap = await DatabaseHelper().getSelectedRecipes(selectedDay);
+    setState(() {
+      selectedRecipes = {
+        'Breakfast': selectedRecipesMap['Breakfast'] != null ? _recipes.firstWhere((recipe) => recipe['id'] == selectedRecipesMap['Breakfast'])['title'] : 'Select a recipe',
+        'Snack 1': selectedRecipesMap['Snack 1'] != null ? _recipes.firstWhere((recipe) => recipe['id'] == selectedRecipesMap['Snack 1'])['title'] : 'Select a recipe',
+        'Lunch': selectedRecipesMap['Lunch'] != null ? _recipes.firstWhere((recipe) => recipe['id'] == selectedRecipesMap['Lunch'])['title'] : 'Select a recipe',
+        'Snack 2': selectedRecipesMap['Snack 2'] != null ? _recipes.firstWhere((recipe) => recipe['id'] == selectedRecipesMap['Snack 2'])['title'] : 'Select a recipe',
+        'Dinner': selectedRecipesMap['Dinner'] != null ? _recipes.firstWhere((recipe) => recipe['id'] == selectedRecipesMap['Dinner'])['title'] : 'Select a recipe',
+        'Extra': selectedRecipesMap['Extra'] != null ? _recipes.firstWhere((recipe) => recipe['id'] == selectedRecipesMap['Extra'])['title'] : 'Select a recipe',
+      };
     });
   }
 
@@ -38,6 +65,25 @@ class _WeeklyPlanPageState extends State<WeeklyPlanPage> {
     if (picked != null && picked != DateTime.now()) {
       setState(() {
         selectedDay = DateFormat('EEE, d MMM yyyy').format(picked);
+      });
+      await _loadSelectedRecipes();
+    }
+  }
+
+  void _selectRecipe(BuildContext context, String meal) async {
+    // Navigate to the recipe selection page and get the selected recipe
+    final selectedRecipe = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => RecipeSelectionPage(recipes: _recipes),
+      ),
+    );
+
+    if (selectedRecipe != null) {
+      final recipeId = _recipes.firstWhere((recipe) => recipe['title'] == selectedRecipe)['id'];
+      await DatabaseHelper().insertSelectedRecipe(selectedDay, meal, recipeId);
+      setState(() {
+        selectedRecipes[meal] = selectedRecipe;
       });
     }
   }
@@ -79,38 +125,13 @@ class _WeeklyPlanPageState extends State<WeeklyPlanPage> {
   }
 
   Widget _buildMealCard(BuildContext context, String meal) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Card(
-        color: Colors.grey[200],
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                meal,
-                style: Theme.of(context).textTheme.bodyLarge,
-                textAlign: TextAlign.left,
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  final selectedRecipe = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => RecipeSelectionPage(recipes: _recipes),
-                    ),
-                  );
-                  if (selectedRecipe != null) {
-                    // Handle the selected recipe
-                    print('Selected Recipe: ${selectedRecipe['name']}');
-                  }
-                },
-                child: Text('Select Recipe'),
-              ),
-            ],
-          ),
-        ),
+    final selectedRecipe = selectedRecipes[meal] ?? 'Select a recipe';
+    return Card(
+      child: ListTile(
+        title: Text(meal),
+        subtitle: Text(selectedRecipe),
+        trailing: Icon(Icons.arrow_forward),
+        onTap: () => _selectRecipe(context, meal),
       ),
     );
   }

@@ -34,8 +34,8 @@ class _MyHomePageState extends State<MyHomePage> {
     _loadRecipes();
     _pages = <Widget>[
       GridPage(recipes: _recipes, onRemoveRecipe: _removeRecipe, onEditRecipe: _editRecipe, isGridView: isGridView),
+      const Center(child: Text('Macronutrient Goals')),
       WeeklyPlanPage(),
-      const Center(child: Text('Page 3')),
     ];
   }
 
@@ -115,12 +115,12 @@ class _MyHomePageState extends State<MyHomePage> {
             label: 'Recipes',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
-            label: 'Weekly Plan',
+            icon: Icon(Icons.auto_graph),
+            label: 'Macro Goals',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.pages),
-            label: 'Page 3',
+            icon: Icon(Icons.calendar_today),
+            label: 'Meal Plan',
           ),
         ],
         currentIndex: _selectedIndex,

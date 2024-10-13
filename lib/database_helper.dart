@@ -18,20 +18,20 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'recipes.db');
     return await openDatabase(
       path,
-      version: 2, // Increment the version number
-      onCreate: (db, version) {
-        return db.execute(
+      version: 3, // Increment the version number
+      onCreate: (db, version) async {
+        await db.execute(
           'CREATE TABLE recipes(id INTEGER PRIMARY KEY, title TEXT, imageUrl TEXT, protein TEXT, carbs TEXT, fats TEXT, energy TEXT, servingSize TEXT, ingredients TEXT)',
         );
+        await db.execute(
+          'CREATE TABLE daily_selected_recipes(id INTEGER PRIMARY KEY AUTOINCREMENT, day TEXT, meal TEXT, recipeId INTEGER, FOREIGN KEY(recipeId) REFERENCES recipes(id))',
+        );
       },
-      onUpgrade: (db, oldVersion, newVersion) {
-        if (oldVersion < 2) {
-          db.execute('ALTER TABLE recipes ADD COLUMN protein TEXT');
-          db.execute('ALTER TABLE recipes ADD COLUMN carbs TEXT');
-          db.execute('ALTER TABLE recipes ADD COLUMN fats TEXT');
-          db.execute('ALTER TABLE recipes ADD COLUMN energy TEXT');
-          db.execute('ALTER TABLE recipes ADD COLUMN servingSize TEXT');
-          db.execute('ALTER TABLE recipes ADD COLUMN ingredients TEXT');
+      onUpgrade: (db, oldVersion, newVersion) async {
+        if (oldVersion < 3) {
+          await db.execute(
+            'CREATE TABLE daily_selected_recipes(id INTEGER PRIMARY KEY AUTOINCREMENT, day TEXT, meal TEXT, recipeId INTEGER, FOREIGN KEY(recipeId) REFERENCES recipes(id))',
+          );
         }
       },
     );
@@ -86,6 +86,35 @@ class DatabaseHelper {
       },
       where: 'id = ?',
       whereArgs: [id],
+    );
+  }
+
+  Future<void> insertSelectedRecipe(String day, String meal, int recipeId) async {
+    final db = await database;
+    await db.insert(
+      'daily_selected_recipes',
+      {'day': day, 'meal': meal, 'recipeId': recipeId},
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<Map<String, int>> getSelectedRecipes(String day) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'daily_selected_recipes',
+      where: 'day = ?',
+      whereArgs: [day],
+    );
+
+    return { for (var item in maps) item['meal'] as String : item['recipeId'] as int };
+  }
+
+  Future<void> deleteSelectedRecipe(String day, String meal) async {
+    final db = await database;
+    await db.delete(
+      'daily_selected_recipes',
+      where: 'day = ? AND meal = ?',
+      whereArgs: [day, meal],
     );
   }
 }
