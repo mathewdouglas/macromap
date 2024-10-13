@@ -54,7 +54,8 @@ class _RecipeSelectionPageState extends State<RecipeSelectionPage> {
                   return ListTile(
                     title: Text(filteredRecipes[index]['title']),
                     onTap: () {
-                      Navigator.of(context).pop(filteredRecipes[index]['title']);
+                      Navigator.of(context)
+                          .pop(filteredRecipes[index]['title']);
                     },
                   );
                 },

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:macromap/settings_page.dart';
 import 'database_helper.dart';
 import 'create_recipe_page.dart';
 import 'recipe_details_page.dart';
@@ -33,10 +34,14 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     _loadRecipes();
     _pages = <Widget>[
-      GridPage(recipes: _recipes, onRemoveRecipe: _removeRecipe, onEditRecipe: _editRecipe, isGridView: isGridView),
-      const Center(child: Text('Macronutrient Goals')),
+      GridPage(
+          recipes: _recipes,
+          onRemoveRecipe: _removeRecipe,
+          onEditRecipe: _editRecipe,
+          isGridView: isGridView),
+      const Center(child: Text('Weight Tracking')),
       WeeklyPlanPage(),
-      const Center(child: Text('Settings')),
+      SettingsPage(),
     ];
   }
 
@@ -72,41 +77,50 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("MacroMap", style: TextStyle(fontWeight: FontWeight.bold),),
-        actions: _selectedIndex == 0
-      ? [
-          IconButton(
-            icon: Icon(isGridView ? Icons.view_list : Icons.grid_view),
-            onPressed: () {
-              setState(() {
-                isGridView = !isGridView;
-              });
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              // Search functionality to be added later
-            },
-          ),
-        ]
-      : null,
-      ),
+      appBar: _selectedIndex == 0
+          ? AppBar(
+              title: const Text(
+                "Recipes",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              actions: _selectedIndex == 0
+                  ? [
+                      IconButton(
+                        icon: Icon(
+                            isGridView ? Icons.view_list : Icons.grid_view),
+                        onPressed: () {
+                          setState(() {
+                            isGridView = !isGridView;
+                          });
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.search),
+                        onPressed: () {
+                          // Search functionality to be added later
+                        },
+                      ),
+                    ]
+                  : null,
+            )
+          : null,
       body: _selectedIndex == 0
-                ? GridPage(
-                    recipes: _recipes,
-                    onRemoveRecipe: _removeRecipe,
-                    onEditRecipe: _editRecipe,
-                    isGridView: isGridView,
-                  )
-                : _pages[_selectedIndex],
+          ? GridPage(
+              recipes: _recipes,
+              onRemoveRecipe: _removeRecipe,
+              onEditRecipe: _editRecipe,
+              isGridView: isGridView,
+            )
+          : _pages[_selectedIndex],
       floatingActionButton: _selectedIndex == 0
           ? FloatingActionButton(
               onPressed: _addRecipe,
               tooltip: 'Create Recipe',
               backgroundColor: Colors.grey,
-              child: const Icon(Icons.add, color: Colors.white,),
+              child: const Icon(
+                Icons.add,
+                color: Colors.white,
+              ),
             )
           : null,
       bottomNavigationBar: BottomNavigationBar(
@@ -118,7 +132,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.auto_graph),
-            label: 'Macro Goals',
+            label: 'Tracking',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_today),
@@ -154,13 +168,14 @@ class GridPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Calculate the height of the card and text dynamically
-    final double cardHeight = MediaQuery.of(context).size.width / 2; // Assuming a 1:1 aspect ratio for the card
+    final double cardHeight = MediaQuery.of(context).size.width /
+        2; // Assuming a 1:1 aspect ratio for the card
     const double textHeight = 39.0; // Approximate height for the text
     final double totalHeight = cardHeight + textHeight - 10;
 
     return isGridView ? buildGridView(totalHeight) : buildListView();
   }
-    
+
   Widget buildGridView(double totalHeight) {
     return Padding(
       padding: const EdgeInsets.all(10.0), // Add padding around the grid
@@ -188,7 +203,8 @@ class GridPage extends StatelessWidget {
               );
             },
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start, // Align children to the start (left)
+              crossAxisAlignment: CrossAxisAlignment
+                  .start, // Align children to the start (left)
               mainAxisSize: MainAxisSize.min,
               children: [
                 Card(
@@ -214,13 +230,14 @@ class GridPage extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      recipe['title'],
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.left, // Align text to the left
-                    ),
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    recipe['title'],
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.left, // Align text to the left
                   ),
+                ),
               ],
             ),
           );
@@ -254,9 +271,9 @@ class GridPage extends StatelessWidget {
                 width: 50,
                 height: 50,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5), 
-                  border: Border.all(width: 0)// Add border
-                ),
+                    borderRadius: BorderRadius.circular(5),
+                    border: Border.all(width: 0) // Add border
+                    ),
                 clipBehavior: Clip.antiAlias,
                 child: recipe['imageUrl'].startsWith('assets/')
                     ? Image.asset(

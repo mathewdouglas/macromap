@@ -41,16 +41,35 @@ class _WeeklyPlanPageState extends State<WeeklyPlanPage> {
     if (_recipes.isEmpty) {
       await _loadRecipes();
     }
-    
-    final selectedRecipesMap = await DatabaseHelper().getSelectedRecipes(selectedDay);
+
+    final selectedRecipesMap =
+        await DatabaseHelper().getSelectedRecipes(selectedDay);
     setState(() {
       selectedRecipes = {
-        'Breakfast': selectedRecipesMap['Breakfast'] != null ? _recipes.firstWhere((recipe) => recipe['id'] == selectedRecipesMap['Breakfast'])['title'] : 'Select a recipe',
-        'Snack 1': selectedRecipesMap['Snack 1'] != null ? _recipes.firstWhere((recipe) => recipe['id'] == selectedRecipesMap['Snack 1'])['title'] : 'Select a recipe',
-        'Lunch': selectedRecipesMap['Lunch'] != null ? _recipes.firstWhere((recipe) => recipe['id'] == selectedRecipesMap['Lunch'])['title'] : 'Select a recipe',
-        'Snack 2': selectedRecipesMap['Snack 2'] != null ? _recipes.firstWhere((recipe) => recipe['id'] == selectedRecipesMap['Snack 2'])['title'] : 'Select a recipe',
-        'Dinner': selectedRecipesMap['Dinner'] != null ? _recipes.firstWhere((recipe) => recipe['id'] == selectedRecipesMap['Dinner'])['title'] : 'Select a recipe',
-        'Extra': selectedRecipesMap['Extra'] != null ? _recipes.firstWhere((recipe) => recipe['id'] == selectedRecipesMap['Extra'])['title'] : 'Select a recipe',
+        'Breakfast': selectedRecipesMap['Breakfast'] != null
+            ? _recipes.firstWhere((recipe) =>
+                recipe['id'] == selectedRecipesMap['Breakfast'])['title']
+            : 'Select a recipe',
+        'Snack 1': selectedRecipesMap['Snack 1'] != null
+            ? _recipes.firstWhere((recipe) =>
+                recipe['id'] == selectedRecipesMap['Snack 1'])['title']
+            : 'Select a recipe',
+        'Lunch': selectedRecipesMap['Lunch'] != null
+            ? _recipes.firstWhere((recipe) =>
+                recipe['id'] == selectedRecipesMap['Lunch'])['title']
+            : 'Select a recipe',
+        'Snack 2': selectedRecipesMap['Snack 2'] != null
+            ? _recipes.firstWhere((recipe) =>
+                recipe['id'] == selectedRecipesMap['Snack 2'])['title']
+            : 'Select a recipe',
+        'Dinner': selectedRecipesMap['Dinner'] != null
+            ? _recipes.firstWhere((recipe) =>
+                recipe['id'] == selectedRecipesMap['Dinner'])['title']
+            : 'Select a recipe',
+        'Extra': selectedRecipesMap['Extra'] != null
+            ? _recipes.firstWhere((recipe) =>
+                recipe['id'] == selectedRecipesMap['Extra'])['title']
+            : 'Select a recipe',
       };
     });
   }
@@ -80,7 +99,8 @@ class _WeeklyPlanPageState extends State<WeeklyPlanPage> {
     );
 
     if (selectedRecipe != null) {
-      final recipeId = _recipes.firstWhere((recipe) => recipe['title'] == selectedRecipe)['id'];
+      final recipeId = _recipes
+          .firstWhere((recipe) => recipe['title'] == selectedRecipe)['id'];
       await DatabaseHelper().insertSelectedRecipe(selectedDay, meal, recipeId);
       setState(() {
         selectedRecipes[meal] = selectedRecipe;
@@ -91,8 +111,21 @@ class _WeeklyPlanPageState extends State<WeeklyPlanPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: false,
+        title: const Text(
+          "Meal Plan",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.calendar_today),
+            onPressed: () => _selectDate(context),
+          ),
+        ],
+      ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

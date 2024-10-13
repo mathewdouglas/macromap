@@ -39,7 +39,8 @@ class DatabaseHelper {
 
   Future<void> insertRecipe(Map<String, dynamic> recipe) async {
     final db = await database;
-    await db.insert('recipes', recipe, conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert('recipes', recipe,
+        conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   Future<List<Map<String, dynamic>>> getRecipes() async {
@@ -49,7 +50,8 @@ class DatabaseHelper {
 
   Future<Map<String, dynamic>?> getRecipe(int id) async {
     final db = await database;
-    final List<Map<String, dynamic>> results = await db.query('recipes', where: 'id = ?', whereArgs: [id]);
+    final List<Map<String, dynamic>> results =
+        await db.query('recipes', where: 'id = ?', whereArgs: [id]);
     if (results.isNotEmpty) {
       return results.first;
     }
@@ -71,7 +73,15 @@ class DatabaseHelper {
     );
   }
 
-  Future<void> updateRecipe(int id, String title, String protein, String carbs, String fats, String energy, String servingSize, String ingredients) async {
+  Future<void> updateRecipe(
+      int id,
+      String title,
+      String protein,
+      String carbs,
+      String fats,
+      String energy,
+      String servingSize,
+      String ingredients) async {
     final db = await database;
     await db.update(
       'recipes',
@@ -89,7 +99,8 @@ class DatabaseHelper {
     );
   }
 
-  Future<void> insertSelectedRecipe(String day, String meal, int recipeId) async {
+  Future<void> insertSelectedRecipe(
+      String day, String meal, int recipeId) async {
     final db = await database;
     await db.insert(
       'daily_selected_recipes',
@@ -106,7 +117,9 @@ class DatabaseHelper {
       whereArgs: [day],
     );
 
-    return { for (var item in maps) item['meal'] as String : item['recipeId'] as int };
+    return {
+      for (var item in maps) item['meal'] as String: item['recipeId'] as int
+    };
   }
 
   Future<void> deleteSelectedRecipe(String day, String meal) async {
